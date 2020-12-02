@@ -1,2 +1,2 @@
 # discordgo-voicestateupdatequeue
-Event enhancer and queue for the VoiceStateUpdate event
+> Event enhancer and queue for the VoiceStateUpdate event
