@@ -1,4 +1,4 @@
-module github.com/ethanent/discord-voicestateupdatequeue
+module github.com/ethanent/discordgo_voicestateupdatequeue
 
 go 1.15
 

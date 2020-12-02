@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/bwmarrin/discordgo"
-	queue "github.com/ethanent/discord-voicestateupdatequeue"
+	queue "github.com/ethanent/discordgo_voicestateupdatequeue"
 	"os"
 	"os/signal"
 )
