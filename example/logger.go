@@ -45,5 +45,7 @@ func main() {
 
 	fmt.Println("Exit")
 
-	s.Close()
+	if err := s.Close(); err != nil {
+		panic(err)
+	}
 }
