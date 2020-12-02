@@ -1,4 +1,4 @@
-package main
+package discordgo_voicestateupdatequeue
 
 import (
 	"github.com/bwmarrin/discordgo"
@@ -28,6 +28,7 @@ type VoiceStateEvent struct {
 	Event          VoiceStateEventType
 	GuildID        string
 	ChannelID      string
+	UserID         string
 	OriginalUpdate *discordgo.VoiceStateUpdate
 }
 
@@ -36,13 +37,21 @@ type userVoiceState struct {
 	channelID string
 }
 
-type VoiceStateUpdateQueue struct {
+type VoiceStateEventQueue struct {
 	userVoiceStates    map[string]*userVoiceState
 	userVoiceStatesMux sync.Mutex
 	Out                chan *VoiceStateEvent
 }
 
-func (q *VoiceStateUpdateQueue) Handler(s *discordgo.Session, e *discordgo.VoiceStateUpdate) {
+func NewVoiceStateEventQueue(c chan *VoiceStateEvent) *VoiceStateEventQueue {
+	return &VoiceStateEventQueue{
+		userVoiceStates:    map[string]*userVoiceState{},
+		userVoiceStatesMux: sync.Mutex{},
+		Out:                c,
+	}
+}
+
+func (q *VoiceStateEventQueue) Handler(s *discordgo.Session, e *discordgo.VoiceStateUpdate) {
 	q.userVoiceStatesMux.Lock()
 	defer q.userVoiceStatesMux.Unlock()
 
@@ -58,6 +67,7 @@ func (q *VoiceStateUpdateQueue) Handler(s *discordgo.Session, e *discordgo.Voice
 				Event:          VoiceChannelLeaveUnknownChannel,
 				GuildID:        e.GuildID,
 				ChannelID:      e.ChannelID,
+				UserID: e.UserID,
 				OriginalUpdate: e,
 			}
 
@@ -70,6 +80,7 @@ func (q *VoiceStateUpdateQueue) Handler(s *discordgo.Session, e *discordgo.Voice
 			Event:          VoiceChannelLeave,
 			GuildID:        e.GuildID,
 			ChannelID:      userState.channelID,
+			UserID: e.UserID,
 			OriginalUpdate: e,
 		}
 
@@ -91,6 +102,7 @@ func (q *VoiceStateUpdateQueue) Handler(s *discordgo.Session, e *discordgo.Voice
 			Event:          VoiceChannelJoin,
 			GuildID:        e.GuildID,
 			ChannelID:      e.ChannelID,
+			UserID: e.UserID,
 			OriginalUpdate: e,
 		}
 
@@ -109,6 +121,7 @@ func (q *VoiceStateUpdateQueue) Handler(s *discordgo.Session, e *discordgo.Voice
 			Event:          VoiceChannelSettingUpdate,
 			GuildID:        e.GuildID,
 			ChannelID:      e.ChannelID,
+			UserID: e.UserID,
 			OriginalUpdate: e,
 		}
 
@@ -126,6 +139,8 @@ func (q *VoiceStateUpdateQueue) Handler(s *discordgo.Session, e *discordgo.Voice
 		// Send previous channel. (Cached)
 		ChannelID: userState.channelID,
 
+		UserID: e.UserID,
+
 		// Construct an artificial update event. Not perfect, but has the right ChannelID, GuildID, and UserID.
 		OriginalUpdate: &discordgo.VoiceStateUpdate{
 			VoiceState: &discordgo.VoiceState{
@@ -140,6 +155,7 @@ func (q *VoiceStateUpdateQueue) Handler(s *discordgo.Session, e *discordgo.Voice
 		Event:          VoiceChannelJoin,
 		GuildID:        e.GuildID,
 		ChannelID:      e.ChannelID,
+		UserID: e.UserID,
 		OriginalUpdate: e,
 	}
 
