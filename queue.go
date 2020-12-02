@@ -25,7 +25,7 @@ const (
 // It is enhanced with a cache. It makes the nature of events much more clear to the consumer.
 // It also handles channel moves seamlessly, converting them to separate leave and join events.
 type VoiceStateEvent struct {
-	Event          VoiceStateEventType
+	Type           VoiceStateEventType
 	GuildID        string
 	ChannelID      string
 	UserID         string
@@ -64,7 +64,7 @@ func (q *VoiceStateEventQueue) Handler(s *discordgo.Session, e *discordgo.VoiceS
 			// VoiceChannelLeaveUnknownChannel
 
 			q.Out <- &VoiceStateEvent{
-				Event:          VoiceChannelLeaveUnknownChannel,
+				Type:           VoiceChannelLeaveUnknownChannel,
 				GuildID:        e.GuildID,
 				ChannelID:      e.ChannelID,
 				UserID:         e.UserID,
@@ -77,7 +77,7 @@ func (q *VoiceStateEventQueue) Handler(s *discordgo.Session, e *discordgo.VoiceS
 		// VoiceChannelLeave
 
 		q.Out <- &VoiceStateEvent{
-			Event:          VoiceChannelLeave,
+			Type:           VoiceChannelLeave,
 			GuildID:        e.GuildID,
 			ChannelID:      userState.channelID,
 			UserID:         e.UserID,
@@ -99,7 +99,7 @@ func (q *VoiceStateEventQueue) Handler(s *discordgo.Session, e *discordgo.VoiceS
 		// This is a VoiceChannelJoin.
 
 		q.Out <- &VoiceStateEvent{
-			Event:          VoiceChannelJoin,
+			Type:           VoiceChannelJoin,
 			GuildID:        e.GuildID,
 			ChannelID:      e.ChannelID,
 			UserID:         e.UserID,
@@ -118,7 +118,7 @@ func (q *VoiceStateEventQueue) Handler(s *discordgo.Session, e *discordgo.VoiceS
 		// This is a VoiceChannelSettingUpdate
 
 		q.Out <- &VoiceStateEvent{
-			Event:          VoiceChannelSettingUpdate,
+			Type:           VoiceChannelSettingUpdate,
 			GuildID:        e.GuildID,
 			ChannelID:      e.ChannelID,
 			UserID:         e.UserID,
@@ -131,7 +131,7 @@ func (q *VoiceStateEventQueue) Handler(s *discordgo.Session, e *discordgo.VoiceS
 	// This is a move. Send a VoiceChannelLeave event, then a VoiceChannelJoin event.
 
 	q.Out <- &VoiceStateEvent{
-		Event: VoiceChannelLeave,
+		Type: VoiceChannelLeave,
 
 		// Send previous guild. (Cached)
 		GuildID: userState.guildID,
@@ -152,7 +152,7 @@ func (q *VoiceStateEventQueue) Handler(s *discordgo.Session, e *discordgo.VoiceS
 	}
 
 	q.Out <- &VoiceStateEvent{
-		Event:          VoiceChannelJoin,
+		Type:           VoiceChannelJoin,
 		GuildID:        e.GuildID,
 		ChannelID:      e.ChannelID,
 		UserID:         e.UserID,

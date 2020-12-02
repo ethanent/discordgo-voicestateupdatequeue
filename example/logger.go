@@ -9,8 +9,8 @@ import (
 )
 
 func handleEvents(c chan *queue.VoiceStateEvent) {
-	for a := range c {
-		fmt.Println(a.Event, a.UserID, a.GuildID, a.ChannelID)
+	for e := range c {
+		fmt.Println(e.Type, e.UserID, e.GuildID, e.ChannelID)
 	}
 }
 
