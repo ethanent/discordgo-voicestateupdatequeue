@@ -67,7 +67,7 @@ func (q *VoiceStateEventQueue) Handler(s *discordgo.Session, e *discordgo.VoiceS
 				Event:          VoiceChannelLeaveUnknownChannel,
 				GuildID:        e.GuildID,
 				ChannelID:      e.ChannelID,
-				UserID: e.UserID,
+				UserID:         e.UserID,
 				OriginalUpdate: e,
 			}
 
@@ -80,7 +80,7 @@ func (q *VoiceStateEventQueue) Handler(s *discordgo.Session, e *discordgo.VoiceS
 			Event:          VoiceChannelLeave,
 			GuildID:        e.GuildID,
 			ChannelID:      userState.channelID,
-			UserID: e.UserID,
+			UserID:         e.UserID,
 			OriginalUpdate: e,
 		}
 
@@ -102,7 +102,7 @@ func (q *VoiceStateEventQueue) Handler(s *discordgo.Session, e *discordgo.VoiceS
 			Event:          VoiceChannelJoin,
 			GuildID:        e.GuildID,
 			ChannelID:      e.ChannelID,
-			UserID: e.UserID,
+			UserID:         e.UserID,
 			OriginalUpdate: e,
 		}
 
@@ -121,7 +121,7 @@ func (q *VoiceStateEventQueue) Handler(s *discordgo.Session, e *discordgo.VoiceS
 			Event:          VoiceChannelSettingUpdate,
 			GuildID:        e.GuildID,
 			ChannelID:      e.ChannelID,
-			UserID: e.UserID,
+			UserID:         e.UserID,
 			OriginalUpdate: e,
 		}
 
@@ -155,7 +155,7 @@ func (q *VoiceStateEventQueue) Handler(s *discordgo.Session, e *discordgo.VoiceS
 		Event:          VoiceChannelJoin,
 		GuildID:        e.GuildID,
 		ChannelID:      e.ChannelID,
-		UserID: e.UserID,
+		UserID:         e.UserID,
 		OriginalUpdate: e,
 	}
 
